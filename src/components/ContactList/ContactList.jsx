@@ -3,20 +3,23 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { getFilteredContacts } from 'redux/selectors';
-import { deleteContact } from 'redux/contactsSlice';
+import { deleteContact } from 'redux/operations';
 import { List, ContactItem, Button } from './ContactListStyle';
 
 function ContactList() {
   const contacts = useSelector(getFilteredContacts);
   const dispatch = useDispatch();
+  const handleDelete = id => {
+    dispatch(deleteContact(id));
+  };
 
   return (
     <List>
-      {contacts.map(({ name, number, index, id }) => {
+      {contacts.map(({ name, number, id }) => {
         return (
-          <ContactItem key={index}>
+          <ContactItem key={id}>
             {name} : {number}
-            <Button type="button" onClick={() => dispatch(deleteContact(id))}>
+            <Button type="button" onClick={() => handleDelete(id)}>
               Delete
             </Button>
           </ContactItem>
@@ -34,7 +37,7 @@ ContactList.propTypes = {
       name: PropTypes.string.isRequired,
       number: PropTypes.string.isRequired,
     })
-  ).isRequired,
+  ),
 
   deleteContact: PropTypes.func,
 };
